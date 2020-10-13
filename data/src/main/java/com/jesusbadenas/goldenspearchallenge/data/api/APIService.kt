@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface APIService {
 
     @GET("/v1/search")
-    suspend fun searchArtist(
+    suspend fun searchArtists(
         @Query("q") query: String,
         @Query("type") type: String = "artist"
     ): ArtistsResponse

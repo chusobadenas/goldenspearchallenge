@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class ArtistsBodyResponse(
     @SerializedName("href") val href: String,
-    @SerializedName("items") val items: ArtistResponse
+    @SerializedName("items") val items: List<ArtistResponse>
 )

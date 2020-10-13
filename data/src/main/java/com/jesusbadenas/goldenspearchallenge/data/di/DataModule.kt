@@ -17,22 +17,36 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val API_CLIENT = "apiClient"
+private const val API_HEADER_INTERCEPTOR = "apiHeaderInterceptor"
 private const val API_NAME = "api"
+private const val AUTH_CLIENT = "authClient"
+private const val AUTH_HEADER_INTERCEPTOR = "authHeaderInterceptor"
 private const val AUTH_NAME = "auth"
 private const val AUTHORIZATION = "Authorization"
 private const val BASIC = "Basic"
+private const val BEARER = "Bearer"
 private const val CACHE_SIZE_MB: Long = 5 * 1024 * 1024
 private const val CLIENT_ID = "clientId"
 private const val CLIENT_SECRET = "clientSecret"
 private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-private const val HEADER_INTERCEPTOR = "headerInterceptor"
 
 val dataModule = module {
-    factory(named(HEADER_INTERCEPTOR)) {
+    factory(named(AUTH_HEADER_INTERCEPTOR)) {
         provideHeaderInterceptor(
             getAuthorization(
-                getProperty(CLIENT_ID),
-                getProperty(CLIENT_SECRET)
+                prefix = BASIC,
+                clientId = getProperty(CLIENT_ID),
+                clientSecret = getProperty(CLIENT_SECRET)
+            )
+        )
+    }
+    factory(named(API_HEADER_INTERCEPTOR)) {
+        provideHeaderInterceptor(
+            getAuthorization(
+                prefix = BEARER,
+                clientId = getProperty(CLIENT_ID),
+                clientSecret = getProperty(CLIENT_SECRET)
             )
         )
     }
@@ -42,10 +56,17 @@ val dataModule = module {
     factory<Gson> {
         GsonBuilder().setDateFormat(DATE_FORMAT).create()
     }
-    factory {
+    factory(named(AUTH_CLIENT)) {
         provideOkHttpClient(
             androidContext(),
-            get(named(HEADER_INTERCEPTOR)),
+            get(named(AUTH_HEADER_INTERCEPTOR)),
+            get()
+        )
+    }
+    factory(named(API_CLIENT)) {
+        provideOkHttpClient(
+            androidContext(),
+            get(named(API_HEADER_INTERCEPTOR)),
             get()
         )
     }
@@ -55,8 +76,8 @@ val dataModule = module {
     single(named(AUTH_NAME)) { provideRetrofit(get(), get(), AuthorizationService.BASE_URL) }
 }
 
-private fun getAuthorization(clientId: String, clientSecret: String): String =
-    "$BASIC ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
+private fun getAuthorization(prefix: String, clientId: String, clientSecret: String): String =
+    "$prefix ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
 
 private fun provideHeaderInterceptor(authorization: String): Interceptor =
     Interceptor { chain ->
