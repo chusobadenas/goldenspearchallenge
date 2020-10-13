@@ -82,42 +82,43 @@ android {
 }
 
 dependencies {
-  implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':data')
 
-  implementation rootProject.ext.androidAppCompat
-  implementation rootProject.ext.androidConstraintLayout
-  implementation rootProject.ext.androidCoreKtx
-  implementation rootProject.ext.androidMaterial
-  implementation rootProject.ext.androidRecyclerView
-  implementation rootProject.ext.archCoreCommon
-  implementation rootProject.ext.coroutinesAndroid
-  implementation rootProject.ext.coroutinesCore
-  implementation rootProject.ext.design
-  implementation rootProject.ext.designSupport
-  implementation rootProject.ext.fragment
-  implementation rootProject.ext.glide
-  implementation rootProject.ext.koinAndroid
-  implementation rootProject.ext.koinFragment
-  implementation rootProject.ext.koinViewModel
-  implementation rootProject.ext.kotlin
-  implementation rootProject.ext.lifeCycleExtensions
-  implementation rootProject.ext.lifeCycleLiveDataKtx
-  implementation rootProject.ext.lifeCycleViewModelKtx
-  implementation rootProject.ext.loggingInterceptor
-  implementation rootProject.ext.retrofit
-  implementation rootProject.ext.retrofitConverterGson
-  implementation rootProject.ext.timber
+    implementation rootProject.ext.androidAppCompat
+    implementation rootProject.ext.androidConstraintLayout
+    implementation rootProject.ext.androidCoreKtx
+    implementation rootProject.ext.androidMaterial
+    implementation rootProject.ext.androidRecyclerView
+    implementation rootProject.ext.archCoreCommon
+    implementation rootProject.ext.coroutinesAndroid
+    implementation rootProject.ext.coroutinesCore
+    implementation rootProject.ext.design
+    implementation rootProject.ext.designSupport
+    implementation rootProject.ext.fragment
+    implementation rootProject.ext.glide
+    implementation rootProject.ext.koinAndroid
+    implementation rootProject.ext.koinFragment
+    implementation rootProject.ext.koinViewModel
+    implementation rootProject.ext.kotlin
+    implementation rootProject.ext.lifeCycleExtensions
+    implementation rootProject.ext.lifeCycleLiveDataKtx
+    implementation rootProject.ext.lifeCycleViewModelKtx
+    implementation rootProject.ext.loggingInterceptor
+    implementation rootProject.ext.retrofit
+    implementation rootProject.ext.retrofitConverterGson
+    implementation rootProject.ext.timber
 
-  kapt rootProject.ext.dataBindingCompiler
-  kapt rootProject.ext.glideCompiler
-  kapt rootProject.ext.lifeCycleCompiler
+    kapt rootProject.ext.dataBindingCompiler
+    kapt rootProject.ext.glideCompiler
+    kapt rootProject.ext.lifeCycleCompiler
 
-  compileOnly rootProject.ext.jsr250
+    compileOnly rootProject.ext.jsr250
 
-  testImplementation rootProject.ext.androidXTestCore
-  testImplementation rootProject.ext.archCoreTesting
-  testImplementation rootProject.ext.coroutinesTest
-  testImplementation rootProject.ext.jUnit
-  testImplementation rootProject.ext.koinTest
-  testImplementation rootProject.ext.mockk
+    testImplementation rootProject.ext.androidXTestCore
+    testImplementation rootProject.ext.archCoreTesting
+    testImplementation rootProject.ext.coroutinesTest
+    testImplementation rootProject.ext.jUnit
+    testImplementation rootProject.ext.koinTest
+    testImplementation rootProject.ext.mockk
 }
