@@ -20,10 +20,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val API_NAME = "api"
 private const val AUTH_NAME = "auth"
 private const val AUTHORIZATION = "Authorization"
+private const val BASIC = "Basic"
 private const val CACHE_SIZE_MB: Long = 5 * 1024 * 1024
 private const val CLIENT_ID = "clientId"
 private const val CLIENT_SECRET = "clientSecret"
-private const val DATE_FORMAT = "YYYY-MM-DDTHH:MM:SSZ"
+private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 private const val HEADER_INTERCEPTOR = "headerInterceptor"
 
 val dataModule = module {
@@ -55,7 +56,7 @@ val dataModule = module {
 }
 
 private fun getAuthorization(clientId: String, clientSecret: String): String =
-    Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.DEFAULT)
+    "$BASIC ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
 
 private fun provideHeaderInterceptor(authorization: String): Interceptor =
     Interceptor { chain ->

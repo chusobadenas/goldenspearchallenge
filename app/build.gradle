@@ -83,7 +83,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':data')
+    api project(':data')
+    implementation project(':domain')
 
     implementation rootProject.ext.androidAppCompat
     implementation rootProject.ext.androidConstraintLayout
