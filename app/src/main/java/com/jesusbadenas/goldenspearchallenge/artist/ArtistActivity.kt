@@ -1,5 +1,7 @@
 package com.jesusbadenas.goldenspearchallenge.artist
 
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jesusbadenas.goldenspearchallenge.R
@@ -13,10 +15,23 @@ class ArtistActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.default_activity)
-        startArtistFragment()
+        handleIntent(intent)
     }
 
-    private fun startArtistFragment() {
-        navigator.navigateToArtistFragment(this)
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        var query: String? = null
+        if (Intent.ACTION_SEARCH == intent?.action) {
+            query = intent.getStringExtra(SearchManager.QUERY)
+        }
+        startArtistFragment(query)
+    }
+
+    private fun startArtistFragment(query: String?) {
+        navigator.navigateToArtistFragment(this, query)
     }
 }

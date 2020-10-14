@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Golden Spear Challenge</string>
     <string name="artists_label">Artists</string>
+    <string name="search_title">Search artist</string>
 </resources>
