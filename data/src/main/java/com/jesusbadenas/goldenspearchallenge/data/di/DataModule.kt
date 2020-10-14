@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
 import com.jesusbadenas.goldenspearchallenge.data.api.AuthorizationService
+import com.jesusbadenas.goldenspearchallenge.data.preferences.SharedPreferencesManager
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -34,21 +35,14 @@ private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 val dataModule = module {
     factory(named(AUTH_HEADER_INTERCEPTOR)) {
         provideHeaderInterceptor(
-            getAuthorization(
-                prefix = BASIC,
+            getBasicAuthorization(
                 clientId = getProperty(CLIENT_ID),
                 clientSecret = getProperty(CLIENT_SECRET)
             )
         )
     }
     factory(named(API_HEADER_INTERCEPTOR)) {
-        provideHeaderInterceptor(
-            getAuthorization(
-                prefix = BEARER,
-                clientId = getProperty(CLIENT_ID),
-                clientSecret = getProperty(CLIENT_SECRET)
-            )
-        )
+        provideHeaderInterceptor(getBearerAuthorization(get()))
     }
     factory {
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
@@ -74,10 +68,14 @@ val dataModule = module {
     factory { provideAuthorizationService(get(named(AUTH_NAME))) }
     single(named(API_NAME)) { provideRetrofit(get(), get(), APIService.BASE_URL) }
     single(named(AUTH_NAME)) { provideRetrofit(get(), get(), AuthorizationService.BASE_URL) }
+    single { SharedPreferencesManager(androidContext()) }
 }
 
-private fun getAuthorization(prefix: String, clientId: String, clientSecret: String): String =
-    "$prefix ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
+private fun getBasicAuthorization(clientId: String, clientSecret: String): String =
+    "$BASIC ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
+
+private fun getBearerAuthorization(sharedPrefs: SharedPreferencesManager): String =
+    "$BEARER ${sharedPrefs.getAccessToken()}"
 
 private fun provideHeaderInterceptor(authorization: String): Interceptor =
     Interceptor { chain ->

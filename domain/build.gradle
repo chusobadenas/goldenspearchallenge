@@ -34,7 +34,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':data')
-    implementation project(':test')
+    testImplementation project(':test')
 
     implementation rootProject.ext.androidAppCompat
     implementation rootProject.ext.coroutinesAndroid

@@ -5,6 +5,6 @@ import com.jesusbadenas.goldenspearchallenge.domain.repositories.SearchRepositor
 import org.koin.dsl.module
 
 val domainModule = module {
-    factory { AuthRepository(get()) }
+    factory { AuthRepository(get(), get()) }
     factory { SearchRepository(get()) }
 }
