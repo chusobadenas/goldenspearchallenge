@@ -50,13 +50,6 @@ val dataModule = module {
     factory<Gson> {
         GsonBuilder().setDateFormat(DATE_FORMAT).create()
     }
-    factory(named(AUTH_CLIENT)) {
-        provideOkHttpClient(
-            androidContext(),
-            get(named(AUTH_HEADER_INTERCEPTOR)),
-            get()
-        )
-    }
     factory(named(API_CLIENT)) {
         provideOkHttpClient(
             androidContext(),
@@ -64,10 +57,23 @@ val dataModule = module {
             get()
         )
     }
+    factory(named(AUTH_CLIENT)) {
+        provideOkHttpClient(
+            androidContext(),
+            get(named(AUTH_HEADER_INTERCEPTOR)),
+            get()
+        )
+    }
     factory { provideAPIService(get(named(API_NAME))) }
     factory { provideAuthorizationService(get(named(AUTH_NAME))) }
-    single(named(API_NAME)) { provideRetrofit(get(), get(), APIService.BASE_URL) }
-    single(named(AUTH_NAME)) { provideRetrofit(get(), get(), AuthorizationService.BASE_URL) }
+    single(named(API_NAME)) { provideRetrofit(get(named(API_CLIENT)), get(), APIService.BASE_URL) }
+    single(named(AUTH_NAME)) {
+        provideRetrofit(
+            get(named(AUTH_CLIENT)),
+            get(),
+            AuthorizationService.BASE_URL
+        )
+    }
     single { SharedPreferencesManager(androidContext()) }
 }
 

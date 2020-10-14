@@ -5,5 +5,6 @@ import com.jesusbadenas.goldenspearchallenge.domain.di.domainModule
 
 val appComponent = listOf(
     dataModule,
-    domainModule
+    domainModule,
+    appModule
 )
