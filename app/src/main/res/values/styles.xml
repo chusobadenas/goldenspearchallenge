@@ -19,4 +19,11 @@
     <style name="AppTheme.ActionBar" parent="AppTheme">
         <item name="android:textColorPrimary">@color/white</item>
     </style>
+
+    <style name="CardTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:padding">@dimen/title_padding</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

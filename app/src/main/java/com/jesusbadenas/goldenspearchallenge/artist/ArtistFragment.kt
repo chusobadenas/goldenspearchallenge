@@ -7,6 +7,8 @@ import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.databinding.ArtistFragmentBinding
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
@@ -15,6 +17,7 @@ import org.koin.android.ext.android.inject
 
 class ArtistFragment : Fragment() {
 
+    private val artistAdapter: ArtistAdapter by inject()
     private val viewModel: ArtistViewModel by inject()
 
     private lateinit var binding: ArtistFragmentBinding
@@ -32,6 +35,8 @@ class ArtistFragment : Fragment() {
         binding.viewModel = viewModel
 
         setHasOptionsMenu(true)
+        setupViews(binding.root)
+        subscribe()
 
         return binding.root
     }
@@ -53,9 +58,22 @@ class ArtistFragment : Fragment() {
         handleSearch()
     }
 
+    private fun setupViews(view: View) {
+        view.findViewById<RecyclerView>(R.id.artists_rv).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = artistAdapter
+        }
+    }
+
+    private fun subscribe() {
+        viewModel.artists.observe(viewLifecycleOwner) { list ->
+            artistAdapter.submitList(list)
+        }
+    }
+
     private fun handleSearch() {
         arguments?.getString(Navigator.QUERY_ARG_KEY)?.let { query ->
-            // TODO
+            viewModel.searchArtists(query)
         }
     }
 }

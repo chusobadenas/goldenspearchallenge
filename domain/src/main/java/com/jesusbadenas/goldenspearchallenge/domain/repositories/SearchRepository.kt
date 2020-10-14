@@ -10,7 +10,7 @@ class SearchRepository(private val apiService: APIService) {
 
     suspend fun getArtists(name: String): List<Artist> =
         withContext(Dispatchers.IO) {
-            apiService.searchArtists(name).artists.items.map { artistResponse ->
+            apiService.searchArtists(query = name).artists.items.map { artistResponse ->
                 artistResponse.toArtist()
             }
         }
