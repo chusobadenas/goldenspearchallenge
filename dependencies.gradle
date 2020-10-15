@@ -11,7 +11,7 @@ ext {
     // Implementation
     androidXVersion = '1.2.0'
     archCoreVersion = '2.1.0'
-    constraintLayoutVersion = '2.0.1'
+    constraintLayoutVersion = '2.0.2'
     coreKtx = '1.3.2'
     coroutinesVersion = '1.3.9'
     dataBindingVersion = '3.5.0'
@@ -23,6 +23,7 @@ ext {
     livedataKtxVersion = '2.2.0'
     materialVersion = '1.2.1'
     okHttpVersion = '4.9.0'
+    pagingVersion = '3.0.0-alpha06'
     recyclerviewVersion = '1.1.0'
     retrofitVersion = '2.9.0'
     securityCryptoVersion = '1.0.0-rc03'
@@ -51,6 +52,7 @@ ext {
     lifeCycleViewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$livedataKtxVersion"
     loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
     okHttp = "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    paging = "androidx.paging:paging-runtime-ktx:$pagingVersion"
     retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
     retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     securityCrypto = "androidx.security:security-crypto:$securityCryptoVersion"
@@ -58,7 +60,7 @@ ext {
 
     // Testing
     androidXTestVersion = '1.3.0'
-    junitVersion = '4.13'
+    junitVersion = '4.13.1'
     mockkVersion = '1.10.2'
 
     androidXTestCore = "androidx.test:core:$androidXTestVersion"

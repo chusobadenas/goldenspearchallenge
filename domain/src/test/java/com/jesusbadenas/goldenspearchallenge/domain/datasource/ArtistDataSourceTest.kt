@@ -1,5 +1,7 @@
-package com.jesusbadenas.goldenspearchallenge.domain.repositories
+package com.jesusbadenas.goldenspearchallenge.domain.datasource
 
+import androidx.paging.PagingSource.LoadParams
+import androidx.paging.PagingSource.LoadResult
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsBodyResponse
@@ -18,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class SearchRepositoryTest {
+class ArtistDataSourceTest {
 
     @get:Rule
     val coroutineRule = CoroutinesTestRule()
@@ -26,12 +28,12 @@ class SearchRepositoryTest {
     @MockK
     private lateinit var apiService: APIService
 
-    private lateinit var searchRepository: SearchRepository
+    private lateinit var dataSource: ArtistsDataSource
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        searchRepository = SearchRepository(apiService)
+        dataSource = ArtistsDataSource(apiService, "john")
     }
 
     @Test
@@ -57,16 +59,36 @@ class SearchRepositoryTest {
                 items = listOf(artistResponse)
             )
         )
-        coEvery { apiService.searchArtists("john") } returns response
+        coEvery {
+            apiService.searchArtists(query = "john", limit = 20, offset = 0)
+        } returns response
 
-        val artists = runBlocking { searchRepository.getArtists("john", 0) }
+        val params = LoadParams.Refresh(key = 0, loadSize = 20, placeholdersEnabled = false)
+        val result: LoadResult<Int, Artist> = runBlocking { dataSource.load(params) }
         val expected = Artist(
             id = "1",
             name = "John Doe",
             imageUrl = "https://i.scdn.co/image/1"
         )
 
-        Assert.assertNotNull(artists)
-        Assert.assertEquals(expected, artists[0])
+        Assert.assertTrue(result is LoadResult.Page)
+        val resultPage = result as LoadResult.Page
+        Assert.assertEquals(expected, resultPage.data[0])
+        Assert.assertEquals(1, resultPage.nextKey)
+    }
+
+    @Test
+    fun testGetArtistsThrowsException() {
+        val exception = Exception("Error 500")
+        coEvery {
+            apiService.searchArtists(query = "john", limit = 20, offset = 0)
+        } throws exception
+
+        val params = LoadParams.Refresh(key = 0, loadSize = 20, placeholdersEnabled = false)
+        val result: LoadResult<Int, Artist> = runBlocking { dataSource.load(params) }
+
+        Assert.assertTrue(result is LoadResult.Error)
+        val resultError = result as LoadResult.Error
+        Assert.assertEquals(exception.message, resultError.throwable.message)
     }
 }

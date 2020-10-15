@@ -3,14 +3,15 @@ package com.jesusbadenas.goldenspearchallenge.artist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
 import com.jesusbadenas.goldenspearchallenge.databinding.ItemArtistBinding
 
-class ArtistAdapter : ListAdapter<Artist, ArtistAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
+class ArtistAdapter :
+    PagingDataAdapter<Artist, ArtistAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         val binding = DataBindingUtil.inflate<ItemArtistBinding>(
@@ -23,11 +24,10 @@ class ArtistAdapter : ListAdapter<Artist, ArtistAdapter.ArtistViewHolder>(Artist
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        val artist = getItem(position)
-        holder.bind(artist)
+        getItem(position)?.let { artist ->
+            holder.bind(artist)
+        }
     }
-
-    override fun getItemId(position: Int): Long = getItem(position).id.toLong()
 
     class ArtistViewHolder(private val binding: ItemArtistBinding) :
         RecyclerView.ViewHolder(binding.root) {

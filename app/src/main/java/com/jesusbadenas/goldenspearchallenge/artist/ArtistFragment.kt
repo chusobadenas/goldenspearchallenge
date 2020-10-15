@@ -7,14 +7,18 @@ import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.databinding.ArtistFragmentBinding
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
 import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel
-import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel.Companion.MAX_SIZE
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 class ArtistFragment : Fragment() {
 
@@ -38,7 +42,6 @@ class ArtistFragment : Fragment() {
 
         setHasOptionsMenu(true)
         setupViews(binding.root)
-        subscribe()
 
         return binding.root
     }
@@ -60,49 +63,26 @@ class ArtistFragment : Fragment() {
         handleSearch()
     }
 
-    private val scrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-            val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
-            val totalItemCount: Int = layoutManager.itemCount
-            val visibleItemCount: Int = layoutManager.childCount
-            val isLastPage = totalItemCount >= MAX_SIZE
-
-            if (!viewModel.isLoading
-                && !isLastPage
-                && firstVisibleItemPosition > 0
-                && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-            ) {
-                loadMoreArtists()
-            }
-        }
-    }
-
     private fun setupViews(view: View) {
         // Recycler view
         layoutManager = LinearLayoutManager(context)
         view.findViewById<RecyclerView>(R.id.artists_rv).apply {
             layoutManager = this@ArtistFragment.layoutManager
             adapter = artistAdapter
-            addOnScrollListener(scrollListener)
-        }
-    }
-
-    private fun subscribe() {
-        viewModel.artists.observe(viewLifecycleOwner) { list ->
-            artistAdapter.submitList(list)
         }
     }
 
     private fun handleSearch() {
         arguments?.getString(Navigator.QUERY_ARG_KEY)?.let { query ->
-            viewModel.loadArtists(query)
-        }
-    }
-
-    private fun loadMoreArtists() {
-        arguments?.getString(Navigator.QUERY_ARG_KEY)?.let { query ->
-            viewModel.loadMoreArtists(query)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.searchArtists(query)
+                    .catch { exception ->
+                        Timber.e(exception)
+                    }
+                    .collectLatest { pagingData ->
+                        artistAdapter.submitData(pagingData)
+                    }
+            }
         }
     }
 }

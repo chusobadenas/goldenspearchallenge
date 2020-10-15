@@ -1,44 +1,34 @@
 package com.jesusbadenas.goldenspearchallenge.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.jesusbadenas.goldenspearchallenge.data.api.APIService
 import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
-import com.jesusbadenas.goldenspearchallenge.domain.repositories.SearchRepository
-import com.jesusbadenas.goldenspearchallenge.util.addMoreItems
-import kotlinx.coroutines.launch
+import com.jesusbadenas.goldenspearchallenge.domain.datasource.ArtistsDataSource
+import kotlinx.coroutines.flow.Flow
 
-class ArtistViewModel(private val searchRepository: SearchRepository) : ViewModel() {
+class ArtistViewModel(private val apiService: APIService) : ViewModel() {
 
-    val artists = MutableLiveData<MutableList<Artist>>()
-    val emptyTextVisible = Transformations.map(artists) { list -> list.isEmpty() }
+    private val pagingConfig = PagingConfig(
+        enablePlaceholders = false,
+        initialLoadSize = PAGE_SIZE,
+        pageSize = PAGE_SIZE
+    )
 
-    private var currentOffset = 0
-    var isLoading = false
+    // TODO
+    val emptyTextVisible = MutableLiveData(false)
 
-    private fun searchArtists(query: String) {
-        isLoading = true
-        viewModelScope.launch {
-            val result = searchRepository.getArtists(query, currentOffset)
-            artists.addMoreItems(result)
-            isLoading = false
-        }
-    }
-
-    fun loadArtists(query: String) {
-        currentOffset = 0
-        artists.value?.clear()
-        searchArtists(query)
-    }
-
-    fun loadMoreArtists(query: String) {
-        currentOffset += PAGE_SIZE
-        searchArtists(query)
-    }
+    fun searchArtists(query: String): Flow<PagingData<Artist>> =
+        Pager(config = pagingConfig) { ArtistsDataSource(apiService, query) }
+            .flow
+            .cachedIn(viewModelScope)
 
     companion object {
         private const val PAGE_SIZE = 20
-        const val MAX_SIZE = 2000
     }
 }

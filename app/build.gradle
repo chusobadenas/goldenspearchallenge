@@ -104,6 +104,7 @@ dependencies {
     implementation rootProject.ext.lifeCycleExtensions
     implementation rootProject.ext.lifeCycleLiveDataKtx
     implementation rootProject.ext.lifeCycleViewModelKtx
+    implementation rootProject.ext.paging
     implementation rootProject.ext.timber
 
     kapt rootProject.ext.dataBindingCompiler
