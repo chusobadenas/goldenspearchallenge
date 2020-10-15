@@ -42,6 +42,7 @@ dependencies {
     implementation rootProject.ext.okHttp
     implementation rootProject.ext.retrofit
     implementation rootProject.ext.retrofitConverterGson
+    implementation rootProject.ext.securityCrypto
 
     testImplementation rootProject.ext.jUnit
     testImplementation rootProject.ext.mockk

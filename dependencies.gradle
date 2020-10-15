@@ -15,7 +15,6 @@ ext {
     coreKtx = '1.3.2'
     coroutinesVersion = '1.3.9'
     dataBindingVersion = '3.5.0'
-    designSupportLibraryVersion = '28.0.0'
     fragmentVersion = '1.2.5'
     glideVersion = '4.11.0'
     jsr250Version = '1.0'
@@ -26,6 +25,7 @@ ext {
     okHttpVersion = '4.9.0'
     recyclerviewVersion = '1.1.0'
     retrofitVersion = '2.9.0'
+    securityCryptoVersion = '1.0.0-rc03'
     timberVersion = '4.7.1'
 
     androidAppCompat = "androidx.appcompat:appcompat:$androidXVersion"
@@ -37,8 +37,6 @@ ext {
     coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     dataBindingCompiler = "com.android.databinding:compiler:$dataBindingVersion"
-    design = "com.android.support:design:$designSupportLibraryVersion"
-    designSupport = "com.android.support:support-v4:$designSupportLibraryVersion"
     fragment = "androidx.fragment:fragment-ktx:$fragmentVersion"
     glide = "com.github.bumptech.glide:glide:$glideVersion"
     glideCompiler = "com.github.bumptech.glide:compiler:$glideVersion"
@@ -55,6 +53,7 @@ ext {
     okHttp = "com.squareup.okhttp3:okhttp:$okHttpVersion"
     retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
     retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    securityCrypto = "androidx.security:security-crypto:$securityCryptoVersion"
     timber = "com.jakewharton.timber:timber:$timberVersion"
 
     // Testing

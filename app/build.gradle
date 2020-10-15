@@ -95,8 +95,6 @@ dependencies {
     implementation rootProject.ext.archCoreCommon
     implementation rootProject.ext.coroutinesAndroid
     implementation rootProject.ext.coroutinesCore
-    implementation rootProject.ext.design
-    implementation rootProject.ext.designSupport
     implementation rootProject.ext.fragment
     implementation rootProject.ext.glide
     implementation rootProject.ext.koinAndroid
@@ -106,9 +104,6 @@ dependencies {
     implementation rootProject.ext.lifeCycleExtensions
     implementation rootProject.ext.lifeCycleLiveDataKtx
     implementation rootProject.ext.lifeCycleViewModelKtx
-    implementation rootProject.ext.loggingInterceptor
-    implementation rootProject.ext.retrofit
-    implementation rootProject.ext.retrofitConverterGson
     implementation rootProject.ext.timber
 
     kapt rootProject.ext.dataBindingCompiler

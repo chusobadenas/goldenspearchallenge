@@ -42,7 +42,8 @@ val dataModule = module {
         )
     }
     factory(named(API_HEADER_INTERCEPTOR)) {
-        provideHeaderInterceptor(getBearerAuthorization(get()))
+        val accessToken = get<SharedPreferencesManager>().getAccessToken()
+        provideHeaderInterceptor(getBearerAuthorization(accessToken))
     }
     factory {
         HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
@@ -80,8 +81,7 @@ val dataModule = module {
 private fun getBasicAuthorization(clientId: String, clientSecret: String): String =
     "$BASIC ${Base64.encodeToString("$clientId:$clientSecret".toByteArray(), Base64.NO_WRAP)}"
 
-private fun getBearerAuthorization(sharedPrefs: SharedPreferencesManager): String =
-    "$BEARER ${sharedPrefs.getAccessToken()}"
+private fun getBearerAuthorization(accessToken: String?): String = "$BEARER $accessToken"
 
 private fun provideHeaderInterceptor(authorization: String): Interceptor =
     Interceptor { chain ->

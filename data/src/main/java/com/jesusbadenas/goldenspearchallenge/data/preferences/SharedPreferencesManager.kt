@@ -2,16 +2,23 @@ package com.jesusbadenas.goldenspearchallenge.data.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.jesusbadenas.goldenspearchallenge.data.R
 
 class SharedPreferencesManager(context: Context) {
 
-    private val sharedPref: SharedPreferences = context.getSharedPreferences(
+    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+    private val sharedPref: SharedPreferences = EncryptedSharedPreferences.create(
         context.resources.getString(R.string.shared_prefs_file),
-        Context.MODE_PRIVATE
+        masterKeyAlias,
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
-    private fun save(key: String, value: Any?) {
+    private fun <T> save(key: String, value: T?) {
         with(sharedPref.edit()) {
             when (value) {
                 is Long -> putLong(key, value)

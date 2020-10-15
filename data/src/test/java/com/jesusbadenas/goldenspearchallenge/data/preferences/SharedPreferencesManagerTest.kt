@@ -3,9 +3,13 @@ package com.jesusbadenas.goldenspearchallenge.data.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.jesusbadenas.goldenspearchallenge.data.R
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -14,7 +18,7 @@ class SharedPreferencesManagerTest {
 
     private lateinit var sharedPrefsManager: SharedPreferencesManager
 
-    @MockK(relaxed = true)
+    @RelaxedMockK
     private lateinit var context: Context
 
     @MockK
@@ -32,15 +36,26 @@ class SharedPreferencesManagerTest {
 
         every { context.resources } returns resources
         every { resources.getString(R.string.shared_prefs_file) } returns "shared_prefs_test"
+        mockkStatic(MasterKeys::class)
+        every { MasterKeys.getOrCreate(any()) } returns "AES256_GCM_SPEC"
+        mockkStatic(EncryptedSharedPreferences::class)
         every {
-            context.getSharedPreferences(
+            EncryptedSharedPreferences.create(
                 "shared_prefs_test",
-                Context.MODE_PRIVATE
+                "AES256_GCM_SPEC",
+                context,
+                any(),
+                any()
             )
         } returns sharedPrefs
         every { sharedPrefs.edit() } returns editor
 
         sharedPrefsManager = SharedPreferencesManager(context)
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
     }
 
     @Test
