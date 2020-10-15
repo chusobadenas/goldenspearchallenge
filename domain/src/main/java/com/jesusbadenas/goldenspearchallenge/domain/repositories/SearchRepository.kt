@@ -8,9 +8,12 @@ import kotlinx.coroutines.withContext
 
 class SearchRepository(private val apiService: APIService) {
 
-    suspend fun getArtists(name: String): List<Artist> =
+    suspend fun getArtists(name: String, offset: Int): List<Artist> =
         withContext(Dispatchers.IO) {
-            apiService.searchArtists(query = name).artists.items.map { artistResponse ->
+            apiService.searchArtists(
+                query = name,
+                offset = offset
+            ).artists.items.map { artistResponse ->
                 artistResponse.toArtist()
             }
         }

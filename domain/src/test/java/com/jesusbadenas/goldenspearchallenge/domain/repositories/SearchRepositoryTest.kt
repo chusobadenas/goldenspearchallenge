@@ -59,7 +59,7 @@ class SearchRepositoryTest {
         )
         coEvery { apiService.searchArtists("john") } returns response
 
-        val artists = runBlocking { searchRepository.getArtists("john") }
+        val artists = runBlocking { searchRepository.getArtists("john", 0) }
         val expected = Artist(
             id = "1",
             name = "John Doe",

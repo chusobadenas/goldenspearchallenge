@@ -37,14 +37,27 @@ class ArtistViewModelTest {
     }
 
     @Test
-    fun testSearchArtistsSuccess() = coroutineRule.runBlockingTest {
+    fun testLoadArtistsSuccess() = coroutineRule.runBlockingTest {
         val artist = Artist(id = "1", name = "John Doe", imageUrl = "https://i.scdn.co/image/1")
-        coEvery { searchRepository.getArtists("john") } returns listOf(artist)
+        coEvery { searchRepository.getArtists("john", 0) } returns listOf(artist)
 
-        viewModel.searchArtists("john")
+        viewModel.loadArtists("john")
         val result = viewModel.artists.getOrAwaitValue()
 
-        coVerify { searchRepository.getArtists("john") }
+        coVerify { searchRepository.getArtists("john", 0) }
+        Assert.assertNotNull(result)
+        Assert.assertEquals(artist, result[0])
+    }
+
+    @Test
+    fun testLoadMoreArtistsSuccess() = coroutineRule.runBlockingTest {
+        val artist = Artist(id = "1", name = "John Doe", imageUrl = "https://i.scdn.co/image/1")
+        coEvery { searchRepository.getArtists("john", 20) } returns listOf(artist)
+
+        viewModel.loadMoreArtists("john")
+        val result = viewModel.artists.getOrAwaitValue()
+
+        coVerify { searchRepository.getArtists("john", 20) }
         Assert.assertNotNull(result)
         Assert.assertEquals(artist, result[0])
     }
