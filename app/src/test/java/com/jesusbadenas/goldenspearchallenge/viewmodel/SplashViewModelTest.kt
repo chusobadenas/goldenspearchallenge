@@ -2,12 +2,15 @@ package com.jesusbadenas.goldenspearchallenge.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.domain.repositories.AuthRepository
 import com.jesusbadenas.goldenspearchallenge.test.CoroutinesTestRule
+import com.jesusbadenas.goldenspearchallenge.test.getOrAwaitValue
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -45,5 +48,17 @@ class SplashViewModelTest {
 
         coVerify { authRepository.updateAccessToken() }
         verify { actionObserver.onChanged(null) }
+    }
+
+    @Test
+    fun testRefreshTokenThrowsException() = coroutineRule.runBlockingTest {
+        val exception = Exception()
+        coEvery { authRepository.updateAccessToken() } throws exception
+
+        viewModel.refreshToken()
+        val uiError = viewModel.uiError.getOrAwaitValue()
+
+        Assert.assertEquals(exception, uiError.throwable)
+        Assert.assertEquals(R.string.generic_error_message, uiError.messageResId)
     }
 }

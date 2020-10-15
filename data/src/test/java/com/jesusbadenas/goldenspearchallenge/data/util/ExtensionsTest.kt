@@ -2,7 +2,7 @@ package com.jesusbadenas.goldenspearchallenge.data.util
 
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ImageResponse
-import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
+import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import org.junit.Assert
 import org.junit.Test
 

@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.databinding.ArtistFragmentBinding
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
+import com.jesusbadenas.goldenspearchallenge.util.showError
+import com.jesusbadenas.goldenspearchallenge.util.toUIError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 
 class ArtistFragment : Fragment() {
 
@@ -77,7 +78,7 @@ class ArtistFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.searchArtists(query)
                     .catch { exception ->
-                        Timber.e(exception)
+                        showError(exception.toUIError())
                     }
                     .collectLatest { pagingData ->
                         artistAdapter.submitData(pagingData)

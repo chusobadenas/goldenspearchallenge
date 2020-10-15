@@ -8,7 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
-import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
+import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.domain.datasource.ArtistsDataSource
 import kotlinx.coroutines.flow.Flow
 
@@ -20,7 +20,7 @@ class ArtistViewModel(private val apiService: APIService) : ViewModel() {
         pageSize = PAGE_SIZE
     )
 
-    // TODO
+    // TODO: show empty text when no result
     val emptyTextVisible = MutableLiveData(false)
 
     fun searchArtists(query: String): Flow<PagingData<Artist>> =

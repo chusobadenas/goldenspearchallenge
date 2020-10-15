@@ -1,4 +1,4 @@
-package com.jesusbadenas.goldenspearchallenge.data.entities
+package com.jesusbadenas.goldenspearchallenge.data.model
 
 data class Artist(
     val id: String,

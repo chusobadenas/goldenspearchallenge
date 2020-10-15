@@ -9,7 +9,7 @@
 
         <variable
             name="artist"
-            type="com.jesusbadenas.goldenspearchallenge.data.entities.Artist" />
+            type="com.jesusbadenas.goldenspearchallenge.data.model.Artist" />
     </data>
 
     <androidx.cardview.widget.CardView

@@ -2,7 +2,7 @@ package com.jesusbadenas.goldenspearchallenge.domain.datasource
 
 import androidx.paging.PagingSource
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
-import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
+import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.data.util.toArtist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

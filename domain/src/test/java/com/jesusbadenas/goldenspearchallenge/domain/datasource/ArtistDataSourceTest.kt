@@ -7,7 +7,7 @@ import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsBodyResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ImageResponse
-import com.jesusbadenas.goldenspearchallenge.data.entities.Artist
+import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.test.CoroutinesTestRule
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

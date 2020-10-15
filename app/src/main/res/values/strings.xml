@@ -4,5 +4,7 @@
     <string name="artist_img_description">Artist image</string>
     <string name="artists_label">Artists</string>
     <string name="empty_artists_list">Sorry, no artists found…</string>
+    <string name="generic_error_title">Oops!</string>
+    <string name="generic_error_message">An error has occurred</string>
     <string name="search_title">Search artist</string>
 </resources>

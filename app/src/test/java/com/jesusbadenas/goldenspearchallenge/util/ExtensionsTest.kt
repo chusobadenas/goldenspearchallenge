@@ -1,26 +1,18 @@
 package com.jesusbadenas.goldenspearchallenge.util
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
-import com.jesusbadenas.goldenspearchallenge.test.getOrAwaitValue
+import com.jesusbadenas.goldenspearchallenge.R
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
 
 class ExtensionsTest {
 
-    @get:Rule
-    val rule = InstantTaskExecutorRule()
-
-    private val intList = listOf(1, 2, 3)
-
     @Test
-    fun testLiveDataAddMoreItemsSuccess() {
-        val liveDataList = MutableLiveData<MutableList<Int>>()
-        liveDataList.addMoreItems(intList)
+    fun testThrowableToUIErrorSuccess() {
+        val exception = Exception("This is an exception")
 
-        val result = liveDataList.getOrAwaitValue()
+        val uiError = exception.toUIError()
 
-        Assert.assertEquals(intList, result)
+        Assert.assertEquals(exception, uiError.throwable)
+        Assert.assertEquals(R.string.generic_error_message, uiError.messageResId)
     }
 }

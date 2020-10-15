@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
+import com.jesusbadenas.goldenspearchallenge.util.showError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.SplashViewModel
 import org.koin.android.ext.android.inject
 
@@ -26,6 +27,9 @@ class SplashActivity : AppCompatActivity() {
     private fun subscribe() {
         viewModel.navigateAction.observe(this) {
             navigateToArtist()
+        }
+        viewModel.uiError.observe(this) { uiError ->
+            showError(uiError)
         }
     }
 
