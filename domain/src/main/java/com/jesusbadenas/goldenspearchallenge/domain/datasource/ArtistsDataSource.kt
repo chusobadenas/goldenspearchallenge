@@ -3,7 +3,9 @@ package com.jesusbadenas.goldenspearchallenge.domain.datasource
 import androidx.paging.PagingSource
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
+import com.jesusbadenas.goldenspearchallenge.data.util.toAlbum
 import com.jesusbadenas.goldenspearchallenge.data.util.toArtist
+import com.jesusbadenas.goldenspearchallenge.data.util.toTrack
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -22,11 +24,26 @@ class ArtistsDataSource(
         // API call
         return try {
             val artists = withContext(Dispatchers.IO) {
+                // Get artists
                 apiService.searchArtists(
                     query = query,
                     limit = limit,
                     offset = offset
-                ).artists.items.map { it.toArtist() }
+                ).artists.items
+                    .map { it.toArtist() }
+                    .onEach { artist ->
+                        // Get albums
+                        apiService.getArtistAlbums(id = artist.id).items.map { it.toAlbum() }
+                            .onEach { album ->
+                                // Add album
+                                artist.albums.add(album)
+                                // Get tracks
+                                apiService.getAlbumTracks(id = album.id).items.map { it.toTrack() }
+                                    .onEach { track ->
+                                        album.tracks.add(track)
+                                    }
+                            }
+                    }
             }
 
             // Next page

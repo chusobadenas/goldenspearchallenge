@@ -32,7 +32,8 @@ class ExtensionsTest {
         val expected = Album(
             id = "1",
             name = "Unplugged",
-            imageUrl = "https://i.scdn.co/image/1"
+            imageUrl = "https://i.scdn.co/image/1",
+            tracks = mutableListOf()
         )
 
         Assert.assertEquals(expected, result)
@@ -45,7 +46,8 @@ class ExtensionsTest {
         val expected = Artist(
             id = "1",
             name = "Nirvana",
-            imageUrl = "https://i.scdn.co/image/1"
+            imageUrl = "https://i.scdn.co/image/1",
+            albums = mutableListOf()
         )
 
         Assert.assertEquals(expected, result)
