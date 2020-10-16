@@ -36,13 +36,13 @@
 
             <TextView
                 android:id="@+id/artist_name"
-                style="@style/CardTitle"
+                style="@style/ArtistTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{artist.name}"
                 app:layout_constraintBottom_toBottomOf="@id/artist_img"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:text="John Doe" />
+                tools:text="Nirvana" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>
