@@ -14,10 +14,13 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
 
 @ExperimentalCoroutinesApi
 class ArtistDataSourceTest {
@@ -78,8 +81,8 @@ class ArtistDataSourceTest {
     }
 
     @Test
-    fun testGetArtistsThrowsException() {
-        val exception = Exception("Error 500")
+    fun testGetArtistsThrowsHttpException() {
+        val exception = HttpException(Response.error<String>(500, "Error 500".toResponseBody()))
         coEvery {
             apiService.searchArtists(query = "john", limit = 20, offset = 0)
         } throws exception

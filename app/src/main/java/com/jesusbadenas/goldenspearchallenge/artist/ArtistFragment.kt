@@ -8,6 +8,7 @@ import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
@@ -16,8 +17,6 @@ import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
 import com.jesusbadenas.goldenspearchallenge.util.showError
 import com.jesusbadenas.goldenspearchallenge.util.toUIError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -43,6 +42,7 @@ class ArtistFragment : Fragment() {
 
         setHasOptionsMenu(true)
         setupViews(binding.root)
+        observe()
 
         return binding.root
     }
@@ -67,23 +67,35 @@ class ArtistFragment : Fragment() {
     private fun setupViews(view: View) {
         // Recycler view
         layoutManager = LinearLayoutManager(context)
+        artistAdapter.addLoadStateListener { loadState ->
+            // Show or hide loading
+            viewModel.loadingVisible.value = loadState.refresh is LoadState.Loading
+            // Show error
+            if (loadState.refresh is LoadState.Error) {
+                val throwable = (loadState.refresh as LoadState.Error).error
+                showError(throwable.toUIError())
+            }
+        }
         view.findViewById<RecyclerView>(R.id.artists_rv).apply {
             layoutManager = this@ArtistFragment.layoutManager
             adapter = artistAdapter
         }
     }
 
+    private fun observe() {
+        viewModel.artists.observe(viewLifecycleOwner) { pagingData ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                artistAdapter.submitData(pagingData)
+            }
+        }
+        viewModel.uiError.observe(viewLifecycleOwner) { uiError ->
+            showError(uiError)
+        }
+    }
+
     private fun handleSearch() {
         arguments?.getString(Navigator.QUERY_ARG_KEY)?.let { query ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.searchArtists(query)
-                    .catch { exception ->
-                        showError(exception.toUIError())
-                    }
-                    .collectLatest { pagingData ->
-                        artistAdapter.submitData(pagingData)
-                    }
-            }
+            viewModel.searchArtists(query)
         }
     }
 }

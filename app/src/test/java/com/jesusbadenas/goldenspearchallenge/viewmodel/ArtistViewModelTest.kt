@@ -1,17 +1,17 @@
 package com.jesusbadenas.goldenspearchallenge.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.jesusbadenas.goldenspearchallenge.data.api.APIService
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistResponse
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsBodyResponse
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsResponse
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ImageResponse
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.jesusbadenas.goldenspearchallenge.data.model.Artist
+import com.jesusbadenas.goldenspearchallenge.domain.repositories.SearchRepository
 import com.jesusbadenas.goldenspearchallenge.test.CoroutinesTestRule
+import com.jesusbadenas.goldenspearchallenge.test.getOrAwaitValue
 import io.mockk.MockKAnnotations
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -28,47 +28,27 @@ class ArtistViewModelTest {
     val coroutineRule = CoroutinesTestRule()
 
     @MockK
-    private lateinit var apiService: APIService
+    private lateinit var searchRepository: SearchRepository
 
     private lateinit var viewModel: ArtistViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        viewModel = ArtistViewModel(apiService)
+        viewModel = ArtistViewModel(searchRepository)
     }
 
     @Test
-    fun testLoadArtistsSuccess() {
-        val artistResponse = ArtistResponse(
-            id = "1",
-            href = "https://api.spotify.com/v1/artists/1",
-            name = "John Doe",
-            popularity = 0,
-            type = "artist",
-            uri = "spotify:artist:1",
-            images = listOf(
-                ImageResponse(
-                    height = 64,
-                    width = 64,
-                    url = "https://i.scdn.co/image/1"
-                )
-            )
-        )
-        val response = ArtistsResponse(
-            ArtistsBodyResponse(
-                href = "https://api.spotify.com/v1/artists/1",
-                items = listOf(artistResponse)
-            )
-        )
-        coEvery {
-            apiService.searchArtists(query = "john", limit = 20, offset = 0)
-        } returns response
+    fun testSearchArtistsSuccess() = coroutineRule.runBlockingTest {
+        val artist = Artist(id = "1", name = "John Doe", imageUrl = "https://i.scdn.co/image/1")
+        val pagingData = PagingData.from(listOf(artist))
+        val liveData = MutableLiveData(pagingData)
+        every { searchRepository.searchArtists("john", viewModel.viewModelScope) } returns liveData
 
-        val resultFlow = viewModel.searchArtists("john")
+        viewModel.searchArtists("john")
 
-        coroutineRule.runBlockingTest {
-            Assert.assertNotNull(resultFlow.first())
-        }
+        val result = viewModel.artists.getOrAwaitValue()
+
+        Assert.assertNotNull(result)
     }
 }

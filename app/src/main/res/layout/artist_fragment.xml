@@ -32,6 +32,16 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_artist" />
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline"
+            bind:isVisible="@{viewModel.loadingVisible}"
+            tools:visibility="gone" />
+
         <TextView
             android:id="@+id/empty_tv"
             android:layout_width="0dp"

@@ -42,6 +42,7 @@ dependencies {
     implementation rootProject.ext.koinAndroid
     implementation rootProject.ext.kotlin
     implementation rootProject.ext.paging
+    implementation rootProject.ext.retrofit
 
     testImplementation rootProject.ext.archCoreTesting
     testImplementation rootProject.ext.coroutinesTest

@@ -6,6 +6,7 @@ import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.data.util.toArtist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class ArtistsDataSource(
     private val apiService: APIService,
@@ -33,7 +34,7 @@ class ArtistsDataSource(
 
             // Result OK
             LoadResult.Page(data = artists, prevKey = null, nextKey = nextKey)
-        } catch (exception: Exception) {
+        } catch (exception: HttpException) {
             LoadResult.Error(exception)
         }
     }

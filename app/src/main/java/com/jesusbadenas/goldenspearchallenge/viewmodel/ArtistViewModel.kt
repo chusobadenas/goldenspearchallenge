@@ -1,34 +1,24 @@
 package com.jesusbadenas.goldenspearchallenge.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.jesusbadenas.goldenspearchallenge.data.api.APIService
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
-import com.jesusbadenas.goldenspearchallenge.domain.datasource.ArtistsDataSource
-import kotlinx.coroutines.flow.Flow
+import com.jesusbadenas.goldenspearchallenge.domain.repositories.SearchRepository
 
-class ArtistViewModel(private val apiService: APIService) : ViewModel() {
+class ArtistViewModel(private val searchRepository: SearchRepository) : BaseViewModel() {
 
-    private val pagingConfig = PagingConfig(
-        enablePlaceholders = false,
-        initialLoadSize = PAGE_SIZE,
-        pageSize = PAGE_SIZE
-    )
+    private val queryLiveData = MutableLiveData<String>()
+    val artists: LiveData<PagingData<Artist>> = Transformations.switchMap(queryLiveData) { query ->
+        searchRepository.searchArtists(query, viewModelScope)
+    }
 
-    // TODO: show empty text when no result
     val emptyTextVisible = MutableLiveData(false)
+    val loadingVisible = MutableLiveData(false)
 
-    fun searchArtists(query: String): Flow<PagingData<Artist>> =
-        Pager(config = pagingConfig) { ArtistsDataSource(apiService, query) }
-            .flow
-            .cachedIn(viewModelScope)
-
-    companion object {
-        private const val PAGE_SIZE = 20
+    fun searchArtists(query: String) {
+        queryLiveData.value = query
     }
 }
