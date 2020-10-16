@@ -3,8 +3,6 @@ package com.jesusbadenas.goldenspearchallenge.domain.datasource
 import androidx.paging.PagingSource.LoadParams
 import androidx.paging.PagingSource.LoadResult
 import com.jesusbadenas.goldenspearchallenge.data.api.APIService
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistResponse
-import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsBodyResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ArtistsResponse
 import com.jesusbadenas.goldenspearchallenge.data.api.response.ImageResponse
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
