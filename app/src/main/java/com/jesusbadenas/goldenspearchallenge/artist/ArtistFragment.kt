@@ -7,7 +7,7 @@ import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,6 @@ import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
 import com.jesusbadenas.goldenspearchallenge.util.showError
 import com.jesusbadenas.goldenspearchallenge.util.toUIError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class ArtistFragment : Fragment() {
@@ -68,13 +67,7 @@ class ArtistFragment : Fragment() {
         // Recycler view
         layoutManager = LinearLayoutManager(context)
         artistAdapter.addLoadStateListener { loadState ->
-            // Show or hide loading
-            viewModel.loadingVisible.value = loadState.refresh is LoadState.Loading
-            // Show error
-            if (loadState.refresh is LoadState.Error) {
-                val throwable = (loadState.refresh as LoadState.Error).error
-                showError(throwable.toUIError())
-            }
+            handleState(loadState)
         }
         view.findViewById<RecyclerView>(R.id.artists_rv).apply {
             layoutManager = this@ArtistFragment.layoutManager
@@ -82,11 +75,26 @@ class ArtistFragment : Fragment() {
         }
     }
 
+    private fun handleState(loadState: CombinedLoadStates) {
+        // Show progress bar
+        val isLoading =
+            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
+        viewModel.emptyTextVisible.value = !isLoading && artistAdapter.itemCount == 0
+        viewModel.loadingVisible.value = isLoading
+        // Show error
+        when {
+            loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+            loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+            loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+            else -> null
+        }?.let { errorState ->
+            showError(errorState.error.toUIError())
+        }
+    }
+
     private fun observe() {
         viewModel.artists.observe(viewLifecycleOwner) { pagingData ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                artistAdapter.submitData(pagingData)
-            }
+            artistAdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
         }
         viewModel.uiError.observe(viewLifecycleOwner) { uiError ->
             showError(uiError)

@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jesusbadenas.goldenspearchallenge.common
+package com.jesusbadenas.goldenspearchallenge.util
 
 import androidx.annotation.MainThread
 import androidx.collection.ArraySet

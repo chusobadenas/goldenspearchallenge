@@ -15,7 +15,7 @@ class ArtistViewModel(private val searchRepository: SearchRepository) : BaseView
         searchRepository.searchArtists(query, viewModelScope)
     }
 
-    val emptyTextVisible = MutableLiveData(false)
+    val emptyTextVisible = MutableLiveData(true)
     val loadingVisible = MutableLiveData(false)
 
     fun searchArtists(query: String) {
