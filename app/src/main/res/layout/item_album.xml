@@ -17,10 +17,10 @@
 
         <ImageView
             android:id="@+id/album_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/album_img_size"
+            android:layout_height="@dimen/album_img_size"
             android:contentDescription="@string/album_img_description"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             bind:imageUrl="@{album.imageUrl}"
@@ -29,9 +29,11 @@
         <TextView
             android:id="@+id/album_name"
             style="@style/AlbumTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{album.name}"
+            app:layout_constraintBottom_toBottomOf="@id/album_img"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/album_img"
             app:layout_constraintTop_toTopOf="@id/album_img"
             tools:text="Unplugged" />

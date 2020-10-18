@@ -1,16 +1,18 @@
 package com.jesusbadenas.goldenspearchallenge.artist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.databinding.ItemArtistBinding
 
-class ArtistAdapter :
+class ArtistAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
     PagingDataAdapter<Artist, ArtistAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -26,6 +28,7 @@ class ArtistAdapter :
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         getItem(position)?.let { artist ->
             holder.bind(artist)
+            loadAlbums(artist, holder.itemView)
         }
     }
 
@@ -37,6 +40,17 @@ class ArtistAdapter :
         }
     }
 
+    private fun loadAlbums(artist: Artist, view: View) {
+        val albumAdapter = AlbumAdapter().apply {
+            submitList(artist.albums)
+        }
+        view.findViewById<RecyclerView>(R.id.albums_rv).apply {
+            layoutManager = LinearLayoutManager(view.context)
+            adapter = albumAdapter
+            setRecycledViewPool(viewPool)
+        }
+    }
+
     internal class ArtistDiffCallback : DiffUtil.ItemCallback<Artist>() {
         override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean =
             oldItem.id == newItem.id
@@ -44,6 +58,7 @@ class ArtistAdapter :
         override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean =
             oldItem.id == newItem.id &&
                     oldItem.name == newItem.name &&
-                    oldItem.imageUrl == newItem.imageUrl
+                    oldItem.imageUrl == newItem.imageUrl &&
+                    oldItem.type == newItem.type
     }
 }

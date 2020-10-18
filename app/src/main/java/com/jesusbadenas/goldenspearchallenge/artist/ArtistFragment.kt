@@ -25,7 +25,6 @@ class ArtistFragment : Fragment() {
     private val viewModel: ArtistViewModel by inject()
 
     private lateinit var binding: ArtistFragmentBinding
-    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,12 +64,11 @@ class ArtistFragment : Fragment() {
 
     private fun setupViews(view: View) {
         // Recycler view
-        layoutManager = LinearLayoutManager(context)
         artistAdapter.addLoadStateListener { loadState ->
             handleState(loadState)
         }
         view.findViewById<RecyclerView>(R.id.artists_rv).apply {
-            layoutManager = this@ArtistFragment.layoutManager
+            layoutManager = LinearLayoutManager(context)
             adapter = artistAdapter
         }
     }

@@ -1,7 +1,7 @@
 package com.jesusbadenas.goldenspearchallenge.data.model
 
-data class Track(
-    val id: String,
-    val name: String,
+class Track(
+    id: String,
+    name: String,
     val duration: Long? = null
-)
+) : Item(id = id, name = name, type = ItemType.TRACK)
