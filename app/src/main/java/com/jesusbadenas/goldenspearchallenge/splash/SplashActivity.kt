@@ -1,5 +1,6 @@
 package com.jesusbadenas.goldenspearchallenge.splash
 
+import android.Manifest
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jesusbadenas.goldenspearchallenge.R
@@ -7,6 +8,8 @@ import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
 import com.jesusbadenas.goldenspearchallenge.util.showError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.SplashViewModel
 import org.koin.android.ext.android.inject
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 
 class SplashActivity : AppCompatActivity() {
 
@@ -21,11 +24,12 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        refreshToken()
+        requestPermissions()
     }
 
     private fun subscribe() {
         viewModel.navigateAction.observe(this) {
+            startWorker()
             navigateToArtist()
         }
         viewModel.uiError.observe(this) { uiError ->
@@ -33,12 +37,48 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshToken() {
-        viewModel.refreshToken()
+    private fun startWorker() {
+        // TODO
     }
 
     private fun navigateToArtist() {
         navigator.navigateToArtistActivity(this)
         finish()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    @AfterPermissionGranted(RC_ACCOUNTS_AND_CALENDAR)
+    private fun requestPermissions() {
+        val perms = arrayOf(
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_CALENDAR,
+        )
+        // Already have permission, do the thing
+        if (EasyPermissions.hasPermissions(this, *perms)) {
+            viewModel.refreshToken()
+        }
+        // Do not have permissions, request them now
+        else {
+            EasyPermissions.requestPermissions(
+                this,
+                getString(R.string.permissions_rationale),
+                RC_ACCOUNTS_AND_CALENDAR,
+                *perms
+            )
+        }
+    }
+
+    companion object {
+        private const val RC_ACCOUNTS_AND_CALENDAR = 1000
     }
 }
