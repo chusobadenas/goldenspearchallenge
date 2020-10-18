@@ -1,7 +1,6 @@
 package com.jesusbadenas.goldenspearchallenge.di
 
 import androidx.recyclerview.widget.RecyclerView
-import com.jesusbadenas.goldenspearchallenge.artist.AlbumAdapter
 import com.jesusbadenas.goldenspearchallenge.artist.ArtistAdapter
 import com.jesusbadenas.goldenspearchallenge.artist.ArtistFragment
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
@@ -12,8 +11,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    factory { ArtistAdapter(get()) }
-    factory { AlbumAdapter() }
+    factory { ArtistAdapter() }
     factory { RecyclerView.RecycledViewPool() }
     fragment { ArtistFragment() }
     single { Navigator() }

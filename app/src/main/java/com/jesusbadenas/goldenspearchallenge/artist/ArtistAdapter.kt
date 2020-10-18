@@ -12,8 +12,10 @@ import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.databinding.ItemArtistBinding
 
-class ArtistAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
+class ArtistAdapter :
     PagingDataAdapter<Artist, ArtistAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
+
+    private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         val binding = DataBindingUtil.inflate<ItemArtistBinding>(
@@ -32,14 +34,6 @@ class ArtistAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
         }
     }
 
-    class ArtistViewHolder(private val binding: ItemArtistBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(artist: Artist) = with(itemView) {
-            binding.artist = artist
-            binding.executePendingBindings()
-        }
-    }
-
     private fun loadAlbums(artist: Artist, view: View) {
         val albumAdapter = AlbumAdapter().apply {
             submitList(artist.albums)
@@ -48,6 +42,14 @@ class ArtistAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
             layoutManager = LinearLayoutManager(view.context)
             adapter = albumAdapter
             setRecycledViewPool(viewPool)
+        }
+    }
+
+    class ArtistViewHolder(private val binding: ItemArtistBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(artist: Artist) = with(itemView) {
+            binding.artist = artist
+            binding.executePendingBindings()
         }
     }
 

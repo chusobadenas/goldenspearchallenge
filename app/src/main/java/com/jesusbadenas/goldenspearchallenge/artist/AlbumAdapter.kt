@@ -1,16 +1,21 @@
 package com.jesusbadenas.goldenspearchallenge.artist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.data.model.Album
 import com.jesusbadenas.goldenspearchallenge.databinding.ItemAlbumBinding
 
 class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
+
+    private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val binding = DataBindingUtil.inflate<ItemAlbumBinding>(
@@ -25,10 +30,22 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffC
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         getItem(position)?.let { album ->
             holder.bind(album)
+            loadTracks(album, holder.itemView)
         }
     }
 
     override fun getItemCount(): Int = currentList.size
+
+    private fun loadTracks(album: Album, view: View) {
+        val trackAdapter = TrackAdapter().apply {
+            submitList(album.tracks)
+        }
+        view.findViewById<RecyclerView>(R.id.tracks_rv).apply {
+            layoutManager = LinearLayoutManager(view.context)
+            adapter = trackAdapter
+            setRecycledViewPool(viewPool)
+        }
+    }
 
     class AlbumViewHolder(private val binding: ItemAlbumBinding) :
         ViewHolder(binding.root) {

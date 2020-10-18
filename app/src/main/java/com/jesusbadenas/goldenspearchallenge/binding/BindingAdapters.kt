@@ -8,6 +8,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.di.GlideApp
+import java.util.concurrent.TimeUnit
 
 @BindingAdapter("isVisible")
 fun View.setIsVisible(isVisible: Boolean) {
@@ -25,5 +26,12 @@ fun ImageView.setImageUrl(url: String?) {
 
 @BindingAdapter("trackName", "trackDuration")
 fun TextView.setTrackInfo(name: String?, duration: Long?) {
-    text = resources.getString(R.string.track_info, name, duration)
+    val millis = duration ?: 0
+    val formattedDuration = String.format(
+        "%02d:%02d",
+        TimeUnit.MILLISECONDS.toMinutes(millis),
+        TimeUnit.MILLISECONDS.toSeconds(millis)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+    )
+    text = resources.getString(R.string.track_info, name, formattedDuration)
 }

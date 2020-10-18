@@ -30,12 +30,23 @@
             android:id="@+id/album_name"
             style="@style/AlbumTitle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
             android:text="@{album.name}"
             app:layout_constraintBottom_toBottomOf="@id/album_img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/album_img"
             app:layout_constraintTop_toTopOf="@id/album_img"
             tools:text="Unplugged" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracks_rv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/album_img"
+            tools:listitem="@layout/item_track" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
