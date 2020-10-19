@@ -12,10 +12,8 @@ import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.data.model.Artist
 import com.jesusbadenas.goldenspearchallenge.databinding.ItemArtistBinding
 
-class ArtistAdapter :
+class ArtistAdapter(private val viewPool: RecyclerView.RecycledViewPool) :
     PagingDataAdapter<Artist, ArtistAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
-
-    private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         val binding = DataBindingUtil.inflate<ItemArtistBinding>(

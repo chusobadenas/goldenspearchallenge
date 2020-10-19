@@ -39,5 +39,15 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <receiver android:name=".calendar.CalendarReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED" />
+                <data android:scheme="content" />
+                <data android:host="com.android.calendar" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".calendar.ScheduledEventReceiver" />
     </application>
 </manifest>

@@ -107,7 +107,6 @@ dependencies {
     implementation rootProject.ext.lifeCycleViewModelKtx
     implementation rootProject.ext.paging
     implementation rootProject.ext.timber
-    implementation rootProject.ext.workManager
 
     kapt rootProject.ext.dataBindingCompiler
     kapt rootProject.ext.glideCompiler

@@ -29,16 +29,11 @@ class SplashActivity : AppCompatActivity() {
 
     private fun subscribe() {
         viewModel.navigateAction.observe(this) {
-            startWorker()
             navigateToArtist()
         }
         viewModel.uiError.observe(this) { uiError ->
             showError(uiError)
         }
-    }
-
-    private fun startWorker() {
-        // TODO
     }
 
     private fun navigateToArtist() {
@@ -63,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CALENDAR,
         )
-        // Already have permission, do the thing
+        // Already have permission
         if (EasyPermissions.hasPermissions(this, *perms)) {
             viewModel.refreshToken()
         }

@@ -1,5 +1,6 @@
 package com.jesusbadenas.goldenspearchallenge.navigation
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,16 @@ class Navigator {
 
     fun navigateToArtistActivity(context: Context) {
         Intent(context, ArtistActivity::class.java).let { intent ->
+            context.startActivity(intent)
+        }
+    }
+
+    fun navigateToArtistActivity(context: Context, query: String?) {
+        Intent(context, ArtistActivity::class.java).apply {
+            action = Intent.ACTION_SEARCH
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            putExtra(SearchManager.QUERY, query)
+        }.let { intent ->
             context.startActivity(intent)
         }
     }
