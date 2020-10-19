@@ -9,9 +9,11 @@ import com.jesusbadenas.goldenspearchallenge.util.showError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.SplashViewModel
 import org.koin.android.ext.android.inject
 import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-class SplashActivity : AppCompatActivity() {
+
+class SplashActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private val navigator: Navigator by inject()
     private val viewModel: SplashViewModel by inject()
@@ -48,6 +50,19 @@ class SplashActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        // Nothing to do
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        requestPermissions()
+        // Check whether the user denied any permissions and checked "NEVER ASK AGAIN"
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            AppSettingsDialog.Builder(this).build().show()
+        }
     }
 
     @AfterPermissionGranted(RC_ACCOUNTS_AND_CALENDAR)

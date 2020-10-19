@@ -36,7 +36,9 @@ class ExtensionsTest {
             tracks = mutableListOf()
         )
 
-        Assert.assertEquals(expected, result)
+        Assert.assertEquals(expected.id, result.id)
+        Assert.assertEquals(expected.name, result.name)
+        Assert.assertEquals(expected.imageUrl, result.imageUrl)
     }
 
     @Test
@@ -50,7 +52,9 @@ class ExtensionsTest {
             albums = mutableListOf()
         )
 
-        Assert.assertEquals(expected, result)
+        Assert.assertEquals(expected.id, result.id)
+        Assert.assertEquals(expected.name, result.name)
+        Assert.assertEquals(expected.imageUrl, result.imageUrl)
     }
 
     @Test
@@ -63,6 +67,8 @@ class ExtensionsTest {
             duration = 150
         )
 
-        Assert.assertEquals(expected, result)
+        Assert.assertEquals(expected.id, result.id)
+        Assert.assertEquals(expected.name, result.name)
+        Assert.assertEquals(expected.duration, result.duration)
     }
 }

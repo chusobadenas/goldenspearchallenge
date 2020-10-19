@@ -38,7 +38,7 @@ class CalendarReceiver : BroadcastReceiver(), KoinComponent {
         val calendarId = getCalendarId(context, email)
         // Get today events
         val todayEvents = getTodayEvents(context, calendarId)
-        calendarEventsManager.addEvents(todayEvents)
+        calendarEventsManager.scheduleEvents(todayEvents)
     }
 
     private fun getUserEmail(context: Context?): String? =

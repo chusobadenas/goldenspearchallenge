@@ -7,15 +7,12 @@ import android.view.*
 import android.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jesusbadenas.goldenspearchallenge.R
 import com.jesusbadenas.goldenspearchallenge.databinding.ArtistFragmentBinding
 import com.jesusbadenas.goldenspearchallenge.navigation.Navigator
 import com.jesusbadenas.goldenspearchallenge.util.showError
-import com.jesusbadenas.goldenspearchallenge.util.toUIError
 import com.jesusbadenas.goldenspearchallenge.viewmodel.ArtistViewModel
 import org.koin.android.ext.android.inject
 
@@ -65,28 +62,11 @@ class ArtistFragment : Fragment() {
     private fun setupViews(view: View) {
         // Recycler view
         artistAdapter.addLoadStateListener { loadState ->
-            handleState(loadState)
+            viewModel.handleState(loadState, artistAdapter.itemCount)
         }
         view.findViewById<RecyclerView>(R.id.artists_rv).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = artistAdapter
-        }
-    }
-
-    private fun handleState(loadState: CombinedLoadStates) {
-        // Show progress bar
-        val isLoading =
-            loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading
-        viewModel.emptyTextVisible.value = !isLoading && artistAdapter.itemCount == 0
-        viewModel.loadingVisible.value = isLoading
-        // Show error
-        when {
-            loadState.append is LoadState.Error -> loadState.append as LoadState.Error
-            loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
-            loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
-            else -> null
-        }?.let { errorState ->
-            showError(errorState.error.toUIError())
         }
     }
 

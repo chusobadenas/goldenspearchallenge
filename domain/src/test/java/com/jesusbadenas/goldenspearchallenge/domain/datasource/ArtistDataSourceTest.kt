@@ -91,7 +91,18 @@ class ArtistDataSourceTest {
 
         Assert.assertTrue(result is LoadResult.Page)
         val resultPage = result as LoadResult.Page
-        Assert.assertEquals(expected, resultPage.data[0])
+        Assert.assertEquals(expected.id, resultPage.data[0].id)
+        Assert.assertEquals(expected.name, resultPage.data[0].name)
+        Assert.assertEquals(expected.albums[0].id, resultPage.data[0].albums[0].id)
+        Assert.assertEquals(expected.albums[0].name, resultPage.data[0].albums[0].name)
+        Assert.assertEquals(
+            expected.albums[0].tracks[0].id,
+            resultPage.data[0].albums[0].tracks[0].id
+        )
+        Assert.assertEquals(
+            expected.albums[0].tracks[0].name,
+            resultPage.data[0].albums[0].tracks[0].name
+        )
         Assert.assertEquals(1, resultPage.nextKey)
     }
 
